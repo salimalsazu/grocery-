@@ -40,9 +40,55 @@ export const productSlice = createSlice({
     reducers: {
         addToProduct: (state, action) => {
             state.products = [...state.products, action.payload]
-        }
+        },
+        updateQty: (state, action) => {
+            const { id, stock } = action.payload;
+
+            state.products = state.products.map(product => {
+                if (product.id === id) {
+                    return {
+                        ...product,
+                        stock: stock - 1
+                    }
+                }
+                else {
+                    return product
+                }
+            })
+        },
+        stockIncrement: (state, action) => {
+            state.products = state.products.map(product => {
+
+                if (product.id === action.payload.id) {
+                    return {
+                        ...product,
+                        stock: product.stock + 1
+                    }
+
+                }
+                else {
+                    return product;
+                }
+            })
+        },
+        stockDecrement: (state, action) => {
+            state.products = state.products.map(product => {
+
+                if (product.id === action.payload.id) {
+                    return {
+                        ...product,
+                        stock: product.stock - 1
+                    }
+
+                }
+                else {
+                    return product;
+                }
+            })
+        },
+
     }
 })
 
-export const { addToProduct } = productSlice.actions;
+export const { addToProduct, updateQty } = productSlice.actions;
 export default productSlice.reducer;

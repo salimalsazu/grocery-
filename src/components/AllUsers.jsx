@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { AiOutlineFilePdf, AiOutlineFileExcel, AiFillPrinter, AiFillCaretDown } from 'react-icons/ai';
+
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import SingleUser from './SingleUser';
 
 
 
@@ -25,6 +28,16 @@ const AllUsers = () => {
     };
 
 
+    //data fetch 
+
+    const { users } = useSelector((state) => state.users)
+
+
+    let allUser;
+
+    if (users.length > 0) {
+        allUser = users.map(u => <SingleUser u={u} user={user} email={email} role={role} plan={plan} status={status} action={action}   ></SingleUser>)
+    }
 
 
 
@@ -103,17 +116,12 @@ const AllUsers = () => {
                             </tr>
                         </thead>
                         <tbody className='border-hidden text-center' >
-                            <tr>
-                                {!user && <td className="border px-4 py-2">John</td>}
-                                {!email && <td className="border px-4 py-2">John@24-7.com</td>}
-                                {!role && <td className="border px-4 py-2">Admin</td>}
-                                {!plan && <td className="border px-4 py-2">Enterprise</td>}
-                                {!status && <td className="border px-4 py-2">Pending</td>}
-                                {!action && <td className="border px-4 py-2">John</td>}
+                            {allUser}
 
-                            </tr>
                         </tbody>
+
                     </table>
+
                 </div>
             </div >
         </div >

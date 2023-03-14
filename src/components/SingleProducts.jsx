@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
 import { BsFileMinus, BsFilePlus } from 'react-icons/bs';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToBuy, addToBuyDecrement, addToBuyIncrement, incrementQty } from '../redux/features/carts/cartSlice';
+import { updateQty } from '../redux/features/products/productsSlice';
 
 const SingleProducts = ({ product }) => {
 
+    const dispatch = useDispatch()
+
     const [change, setChange] = useState(false)
 
-    const handleAddtoCart = () => {
+    const handleAddtoBuy = () => {
         setChange(!change)
+        dispatch(updateQty(product))
+        dispatch(addToBuy(product))
 
+    }
+    const { buy } = useSelector((state) => state.cart)
+
+    const handleIncrement = () => {
+        dispatch(addToBuyIncrement(buy))
+        dispatch(updateQty(product))
+    }
+
+    const handleDecrement = () => {
+        dispatch(addToBuyDecrement(buy.id))
     }
 
 
@@ -23,15 +40,16 @@ const SingleProducts = ({ product }) => {
             </div>
             <div>
                 {
-                    !change && <button onClick={handleAddtoCart} className='w-full py-2 bg-blue-600 text-white rounded-md' >Add to Product</button>
+                    !change && <button onClick={handleAddtoBuy} className='w-full py-2 bg-blue-600 text-white rounded-md' >Add to Product</button>
                 }
 
                 {
                     change && <div className='w-full py-2 bg-white text-gray-700  font-bold border rounded-lg' >
 
-                        <div className='flex items-center justify-center text-2xl' ><span className='mr-3' ><BsFileMinus></BsFileMinus></span>
-                            <span>0</span>
-                            <span><BsFilePlus className='ml-3' ></BsFilePlus></span>
+                        <div className='flex items-center justify-center text-2xl' ><span onClick={handleDecrement} className='mr-3' ><BsFileMinus></BsFileMinus></span>
+                            <span> {buy.quantity}</span>
+
+                            <span onClick={handleIncrement} ><BsFilePlus className='ml-3' ></BsFilePlus></span>
 
                             <button className='px-6 py-1 bg-blue-600 rounded-lg text-white ml-4' >Buy Now</button>
                         </div>

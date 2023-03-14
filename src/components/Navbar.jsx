@@ -17,7 +17,7 @@ const Navbar = () => {
     navigation = nav.map(singleNav => <AllLink singleNav={singleNav}></AllLink>)
 
     return (
-        <header className="p-4 bg-slate-100 sticky top-0">
+        <header className="p-4 bg-slate-300 sticky top-0 z-50">
             <div className="container flex justify-between h-10 mx-auto">
                 <a rel="noopener noreferrer" href="/" aria-label="Back to homepage" className="flex items-center p-2">
                     <span className='text-3xl font-extrabold' >Salim_Grocery</span>
