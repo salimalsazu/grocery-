@@ -42,22 +42,36 @@ export const cartSlice = createSlice({
             }
         },
         addToBuy: (state, action) => {
-            state.buy = { ...action.payload, quantity: 1 }
+            state.buy.push(action.payload)
         },
 
+        // addToBuyIncrement: (state, action) => {
+        //     console.log(state);
+
+        //     const selectedProduct = state.buy.find((product) => product.id === action.payload.id)
+
+        //     if (selectedProduct) {
+        //         selectedProduct.quantity += 1;
+
+        //         state.buy
+        //             .filter(product => product.id !== selectedProduct.id)
+        //             .push(selectedProduct)
+        //     }
+        // },
         addToBuyIncrement: (state, action) => {
-            console.log(state);
 
-            const selectedProduct = state.buy.find((product) => product.id === action.payload.id)
+            state.buy = state.buy.map(product => {
+                if (product.id === action.payload.id) {
+                    product.quantity = product.quantity + 1
+                }
 
-            if (selectedProduct) {
-                selectedProduct.quantity += 1;
+                return product
+            })
 
-                state.buy
-                    .filter(product => product.id !== selectedProduct.id)
-                    .push(selectedProduct)
-            }
+
         },
+
+
         addToBuyDecrement: (state, action) => {
             console.log(state.buy);
             state.buy = {

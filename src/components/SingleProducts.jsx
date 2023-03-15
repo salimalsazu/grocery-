@@ -8,6 +8,8 @@ const SingleProducts = ({ product }) => {
 
     const dispatch = useDispatch()
 
+
+
     const [change, setChange] = useState(false)
 
     const handleAddtoBuy = () => {
@@ -18,9 +20,13 @@ const SingleProducts = ({ product }) => {
     }
     const { buy } = useSelector((state) => state.cart)
 
+    console.log(buy);
+    // const newbuyQ = buy.find(b => b.id === product.id)
+    // console.log(newbuyQ);
+
     const handleIncrement = () => {
-        dispatch(addToBuyIncrement(buy))
-        dispatch(updateQty(product))
+        // dispatch(addToBuyIncrement(buy))
+        dispatch(addToBuyIncrement(product?.id))
     }
 
     const handleDecrement = () => {
@@ -47,7 +53,7 @@ const SingleProducts = ({ product }) => {
                     change && <div className='w-full py-2 bg-white text-gray-700  font-bold border rounded-lg' >
 
                         <div className='flex items-center justify-center text-2xl' ><span onClick={handleDecrement} className='mr-3' ><BsFileMinus></BsFileMinus></span>
-                            <span> {buy.quantity}</span>
+                            <span> {product.quantity}</span>
 
                             <span onClick={handleIncrement} ><BsFilePlus className='ml-3' ></BsFilePlus></span>
 
