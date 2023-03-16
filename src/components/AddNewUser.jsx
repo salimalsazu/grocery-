@@ -7,6 +7,8 @@ import Swal from 'sweetalert2'
 const AddNewUser = () => {
     const { register, handleSubmit, reset } = useForm();
 
+    const imageHostKey = "f04df4e1343869002a97bc435ec536f7";
+
     const roles = [
         { value: 'Admin', label: 'Admin' },
         { value: 'Editor', label: 'Editor' },
@@ -25,15 +27,33 @@ const AddNewUser = () => {
     const dispatch = useDispatch()
 
     const handleSubmitUser = (data) => {
-        const dataUser = {
-            ...data,
-            status: "pending"
 
-        }
-        // console.log(dataUser);
-        dispatch(addUser(dataUser))
-        reset()
-        Swal.fire('User has been added')
+        const image = data.image[0];
+
+        const formData = new FormData();
+        formData.append('image', image)
+        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(imgData => {
+                console.log(imgData)
+                if (imgData.success) {
+                    console.log(imgData.data.url);
+                }
+                const dataUser = {
+                    ...data,
+                    image: imgData.data.url,
+                    status: "pending"
+
+                }
+                // console.log(dataUser);
+                dispatch(addUser(dataUser))
+                reset()
+                Swal.fire('User has been added')
+            })
     }
 
     return (
@@ -87,12 +107,12 @@ const AddNewUser = () => {
                     <div className="flex flex-wrap -mx-3 mb-6">
                         <div className="w-full px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="price">
-                                Image Link
+                                Upload Image
                             </label>
                             <input
                                 {...register("image", { required: true })}
                                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                type="url"
+                                type="file"
                                 min="0"
                                 step="0.01"
                                 placeholder='Your Image Link'

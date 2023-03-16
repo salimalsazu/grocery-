@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { BsFileMinus, BsFilePlus } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToBuy, addToBuyDecrement, addToBuyIncrement, incrementQty } from '../redux/features/carts/cartSlice';
-import { updateQty } from '../redux/features/products/productsSlice';
+import { useNavigate } from 'react-router-dom';
+import { addToBuy, addToCart } from '../redux/features/carts/cartSlice';
+import { decrementQuantity, incrementQuantity, updateQty, stockIncrement, stockDecrement } from '../redux/features/products/productsSlice';
 
 const SingleProducts = ({ product }) => {
 
     const dispatch = useDispatch()
-
-
 
     const [change, setChange] = useState(false)
 
@@ -21,17 +21,36 @@ const SingleProducts = ({ product }) => {
     const { buy } = useSelector((state) => state.cart)
 
     console.log(buy);
-    // const newbuyQ = buy.find(b => b.id === product.id)
-    // console.log(newbuyQ);
+
 
     const handleIncrement = () => {
-        // dispatch(addToBuyIncrement(buy))
-        dispatch(addToBuyIncrement(product?.id))
+        if (product.stock > 0) {
+            dispatch(stockDecrement(product?.id))
+            dispatch(incrementQuantity(product?.id))
+        }
     }
 
     const handleDecrement = () => {
-        dispatch(addToBuyDecrement(buy.id))
+
+        if (product.quantity > 1) {
+            dispatch(stockIncrement(product?.id))
+            dispatch(decrementQuantity(product?.id))
+        }
+
     }
+
+    ///price update 
+    const total = product.price * product.quantity;
+
+
+
+    //add to Cart 
+
+    const handleAddToCart = () => {
+        dispatch(addToCart(product))
+        toast.success('Product has been added to cart')
+    }
+
 
 
     return (
@@ -40,7 +59,7 @@ const SingleProducts = ({ product }) => {
             <div className="mt-6 mb-2">
                 <span className="block text-xs font-medium tracking-widest uppercase ">{product.name}</span>
                 <div className='flex items-center justify-between mt-5' >
-                    <h2 className="text-xl font-semibold tracking-wide">Price: ${product.price}</h2>
+                    <h2 className="text-xl font-semibold tracking-wide">Price: ${total}</h2>
                     <p className="text-black">QTY: {product.stock}</p>
                 </div>
             </div>
@@ -57,7 +76,7 @@ const SingleProducts = ({ product }) => {
 
                             <span onClick={handleIncrement} ><BsFilePlus className='ml-3' ></BsFilePlus></span>
 
-                            <button className='px-6 py-1 bg-blue-600 rounded-lg text-white ml-4' >Buy Now</button>
+                            <button onClick={handleAddToCart} className='px-6 py-1 bg-blue-600 rounded-lg text-white ml-4' >Buy Now</button>
                         </div>
 
 

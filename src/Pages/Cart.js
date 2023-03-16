@@ -1,74 +1,47 @@
 import React from 'react';
-import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
-
-import BillingDetails from '../components/BillingDetails';
+import { useSelector } from 'react-redux';
+import SingleCart from '../components/SingleCart';
 
 
 const Cart = () => {
 
+    const { cart } = useSelector((state) => state.cart)
 
+    let content;
 
+    if (cart.length > 0) {
+        content = cart.map(singleCart => <SingleCart singleCart={singleCart} key={singleCart.id} />)
+    } else if (cart.length === 0) {
+        content = <p className='font-extrabold text-2xl text-red-500'> No Product has Been Added </p>
+    }
 
 
     return (
-        // <main className="py-16">
-        //     <div className="container 2xl:px-8 px-2 mx-auto">
-        //         <h2 className="mb-8 text-xl font-bold">Shopping Cart</h2>
-        //         <div className="cartListContainer">
-        //             <div className="space-y-6">
-        //                 {/* Cart Item */}
-        //                 {
-        //                     cart?.map(item =>
-        //                         <div className="cartCard">
-        //                             <div className="flex items-center col-span-6 space-x-6">
-        //                                 {/* cart image */}
-        //                                 <img className="w-40 h-40" src={item?.image} alt="product" />
-        //                                 {/* cart item info */}
-        //                                 <div className="space-y-2">
-        //                                     <h4 className='fontbold' >{item?.title}</h4>
-        //                                     <p>BDT <span >{item?.singlePrice}</span></p>
-        //                                 </div>
-        //                             </div>
-        //                             <div className="flex items-center justify-center col-span-4 mt-4 space-x-8 md:mt-0">
-        //                                 {/* amount buttons */}
-        //                                 <div className="flex items-center space-x-4">
-        //                                     <button >
-        //                                         {/* <i className="text-lg fa-solid fa-plus" /> */}
-        //                                         <FaPlus className="text-lg" ></FaPlus>
-        //                                     </button>
-        //                                     <span className="lws-cartQuantity">{item?.quantity}</span>
-        //                                     <button >
-        //                                         {/* <i className="text-lg fa-solid fa-minus" /> */}
-        //                                         <FaMinus className="text-lg" ></FaMinus>
-        //                                     </button>
-        //                                 </div>
-        //                                 {/* price */}
-        //                                 <p className="text-lg font-bold">BDT <span >{item?.price}</span></p>
-        //                             </div>
-        //                             {/* delete button */}
-        //                             <div className="flex items-center justify-center col-span-2 mt-4 md:justify-end md:mt-0">
-        //                                 <button className="lws-removeFromCart">
-        //                                     {/* <i className="text-lg text-red-400 fa-solid fa-trash" /> */}
-        //                                     <FaTrash className="text-lg" ></FaTrash>
-        //                                 </button>
-        //                             </div>
-        //                         </div>
+        <div className="flex flex-col max-w-3xl p-6 space-y-4 sm:p-10 justify-center mx-auto">
+            <h2 className="text-xl font-semibold">Your cart</h2>
+            <ul className="flex flex-col divide-y divide-gray-700">
+                {content}
+            </ul>
+            <div className="space-y-1 text-right">
+                {/* <p>Total amount:
+                <span className="font-semibold">357 €</span>
+            </p> */}
+                <p className="text-sm dark:text-gray-400">{cart.length > 0 && "Not including taxes and shipping costs"}</p>
+            </div>
+            <div className="flex justify-end space-x-4">
+                <button type="button" className="px-6 py-2 border rounded-md dark:border-violet-400">Back
+                    <span className="sr-only sm:not-sr-only">to shop</span>
+                </button>
+                {
+                    cart.length > 0 && <button type="button" className="px-6 py-2 border rounded-md dark:bg-violet-400 dark:text-gray-900 dark:border-violet-400">
+                        <span className="sr-only sm:not-sr-only">Continue to</span>Checkout
+                    </button>
+                }
+            </div>
+        </div>
 
 
-        //                     )
 
-        //                 }
-        //                 {/* Cart Items Ends */}
-        //             </div>
-        //             {/* Bill Details */}
-        //             <div>
-        //                 <BillingDetails />
-        //             </div>
-        //         </div>
-        //     </div>
-        // </main>
-
-        <div></div>
     );
 };
 

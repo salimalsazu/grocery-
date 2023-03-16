@@ -9,14 +9,38 @@ const AddNewProduct = () => {
 
     const dispatch = useDispatch();
 
+    const imageHostKey = "f04df4e1343869002a97bc435ec536f7";
+
 
     const handleAddProduct = (data) => {
-        const product = {
-            ...data
-        }
-        dispatch(addToProduct(product))
-        reset()
-        Swal.fire('Product has been added')
+    
+
+        const image = data.image[0];
+      
+        const formData = new FormData();
+        formData.append('image', image)
+        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(imgData => {
+                console.log(imgData)
+                if (imgData.success) {
+                    console.log(imgData.data.url);
+                }
+
+                const product = {
+                    ...data,
+                    image: imgData.data.url,
+                }
+                dispatch(addToProduct(product))
+                reset()
+                Swal.fire('Product has been added')
+
+            })
+
     }
 
 
@@ -63,13 +87,13 @@ const AddNewProduct = () => {
                     <div className="flex flex-wrap -mx-3 mb-6">
                         <div className="w-full px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="image">
-                                Image URL
+                                Upload Image
                             </label>
                             <input
                                 {...register("image", { required: true })}
                                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="image"
-                                type="url"
+                                type="file"
                                 name='image'
                                 required
                             />

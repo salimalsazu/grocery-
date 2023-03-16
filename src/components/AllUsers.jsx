@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import ReactHtmlTableToExcel from 'react-html-table-to-excel';
 import { AiOutlineFilePdf, AiOutlineFileExcel, AiFillPrinter, AiFillCaretDown } from 'react-icons/ai';
+
+import { useReactToPrint } from "react-to-print";
 
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -8,7 +11,7 @@ import SingleUser from './SingleUser';
 
 
 const AllUsers = () => {
-
+    const conponentPDF = useRef();
 
     const [user, setUser] = useState(false);
     const [email, setEmail] = useState(false);
@@ -41,14 +44,32 @@ const AllUsers = () => {
 
 
 
+    const generatePDF = useReactToPrint({
+        content: () => conponentPDF.current,
+        documentTitle: "Userdata",
+        onAfterPrint: () => alert("Data saved in PDF")
+    });
+
     return (
         <div>
-            <h1 className='text-blue-500 font-bold text-2xl' >Add Users</h1>
+            <h1 className='text-blue-500 font-bold text-2xl' >All Users</h1>
             <div className='bg-white mt-5 shadow-md shadow-gray-400 rounded-md  w-full h-screen p-10 '>
                 <div className='flex justify-between items-center ' >
                     <div className='flex gap-4' >
-                        <button className='px-6 py-1 border rounded-lg text-gray-500 flex items-center  ' ><AiOutlineFilePdf className='mr-2'></AiOutlineFilePdf>PDF</button>
-                        <button className='px-6 py-1 border rounded-lg text-gray-500 flex items-center' ><AiOutlineFileExcel className='mr-2'></AiOutlineFileExcel>EXCEL</button>
+                        <button onClick={generatePDF} className='px-6 py-1 border rounded-lg text-gray-500 flex items-center  ' ><AiOutlineFilePdf className='mr-2'></AiOutlineFilePdf>PDF</button>
+
+
+                        <ReactHtmlTableToExcel
+                            id="test-table-xls-button"
+                            className="download-table-xls-button"
+                            table="table-to-xls"
+                            filename="AllUser"
+                            sheet="tablexls"
+                            buttonText={
+                                <button className='px-6 pdf-button py-1 border rounded-lg text-gray-500 flex items-center' ><AiOutlineFileExcel className='mr-2'></AiOutlineFileExcel>EXCEL</button>
+                            }
+                        />
+
                         <button className='px-6 py-1 border rounded-lg text-gray-500 flex items-center ' ><AiFillPrinter className='mr-2' ></AiFillPrinter>PRINT</button>
                         <button className='px-6 py-1 border rounded-lg text-gray-500 ' >
 
@@ -103,8 +124,8 @@ const AllUsers = () => {
                     </div>
                 </div>
 
-                <div className='mt-3' >
-                    <table className="table-auto w-full ">
+                <div className='mt-3' ref={conponentPDF} style={{ width: '100%' }} >
+                    <table id="table-to-xls" className="table-auto w-full ">
                         <thead className='bg-gray-100 w-full rounded-lg text-gray-600'>
                             <tr>
                                 {!user && <th className="px-4 py-2">User</th>}

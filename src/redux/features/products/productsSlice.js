@@ -63,7 +63,7 @@ export const productSlice = createSlice({
         stockIncrement: (state, action) => {
             state.products = state.products.map(product => {
 
-                if (product.id === action.payload.id) {
+                if (product.id === action.payload) {
                     return {
                         ...product,
                         stock: product.stock + 1
@@ -78,7 +78,7 @@ export const productSlice = createSlice({
         stockDecrement: (state, action) => {
             state.products = state.products.map(product => {
 
-                if (product.id === action.payload.id) {
+                if (product.id === action.payload) {
                     return {
                         ...product,
                         stock: product.stock - 1
@@ -91,8 +91,35 @@ export const productSlice = createSlice({
             })
         },
 
+        incrementQuantity: (state, action) => {
+            state.products = state.products.map((product) => {
+                if (product.id === action.payload) {
+                    return {
+                        ...product,
+                        quantity: product.quantity + 1,
+                    };
+                } else {
+                    return product;
+                }
+            });
+        },
+        decrementQuantity: (state, action) => {
+            state.products = state.products.map((product) => {
+                if (product.id === action.payload) {
+                    return {
+                        ...product,
+                        quantity: product.quantity - 1,
+                    };
+                } else {
+                    return product;
+                }
+            });
+        },
+
+
+
     }
 })
 
-export const { addToProduct, updateQty } = productSlice.actions;
+export const { addToProduct, updateQty, incrementQuantity, decrementQuantity, stockIncrement, stockDecrement } = productSlice.actions;
 export default productSlice.reducer;
